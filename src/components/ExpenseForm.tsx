@@ -11,21 +11,25 @@ import { useBudget } from "../hooks/useBudget";
 
 export default function ExpenseForm() {
 
-    const {dispatch,state} = useBudget()
+    const {dispatch,state,reaminingBudget} = useBudget()
 
     const [expense, setExpense] = useState<DraftExpense>({
-        amount:0,
-        expenseName:'',
-        category:'',
-        date: new Date()
-        })
+            amount:0,
+            expenseName:'',
+            category:'',
+            date: new Date()
+            })
 
     const [error, setError] = useState('')
+
+    const [previousAmount, setPreviousAmount] = useState(0)
 
     useEffect(() => {
         if(state.editingId) {
             const editingExpense = state.expenses.filter(currentExpense => currentExpense.id === state.editingId) [0]
             setExpense(editingExpense)
+            setPreviousAmount(editingExpense.amount)
+
         }
     }, [state.editingId]) 
 
@@ -56,13 +60,20 @@ export default function ExpenseForm() {
                 
             } 
 
-                if(state.editingId) {
-                    dispatch({type:'update-expense', payload:{expense:{id:state.editingId, ...expense}}})
+            //Validando limite
+            if((expense.amount - previousAmount) > reaminingBudget) {
+                setError('Presupuesto arrebasado')
+                return
+                
+            } 
+
+                    if(state.editingId) {
+                        dispatch({type:'update-expense', payload:{expense:{id:state.editingId, ...expense}}})
 
 
-                }else{
-                    dispatch({type:'add-expense', payload:{expense}})
-                }
+                    }else{
+                        dispatch({type:'add-expense', payload:{expense}})
+                    }
             
 
             setExpense({
@@ -71,6 +82,7 @@ export default function ExpenseForm() {
                 category:'',
                 date: new Date()
             })
+        setPreviousAmount(0)
 
         }
 
@@ -79,7 +91,7 @@ export default function ExpenseForm() {
         <form className="md:space-y-5 space-y-2" onSubmit={handleSubmit} >
             <legend
             className="uppercase text-center md:text-2xl text-xl font-black border-b-4 border-blue-500 md:py py-2"
-            > Nuevo Gasto </legend>
+            >{state.editingId ? 'Guardar Cambios': 'Nuevo Gasto'}</legend>
             {error && <ErrorMessage>{error}</ErrorMessage> }
             <div className="flex flex-col gap-2">
                 <label
@@ -163,7 +175,7 @@ export default function ExpenseForm() {
             <input
             type="submit"
             className="bg-blue-600 uppercase text-white rounded-lg md:p-2 p-1 font-bold w-full cursor-pointer text-center"
-            value={'Registrar Gasto'}
+            value={state.editingId ? 'Actualizar Cambios': 'Registar Gasto'}
             />
 
             

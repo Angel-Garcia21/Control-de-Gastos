@@ -11,7 +11,7 @@
     @apply bg-blue-600;
 }
 .swipeable-list-item__trailing-actions {
-    @apply bg-pink-600;
+    @apply bg-red-700;
 }
 .swipeable-list .swipe-action {
     @apply flex justify-center items-center
