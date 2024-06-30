@@ -13,7 +13,7 @@ export default function BudgetTracker() {
     
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 md:gap-5 gap-3">
-            <div className="flex justify-center">
+            <div className="flex md:justify-center md:w-80 md:h-80 h-64 w-64 mx-auto ">
                 <CircularProgressbar
                 value={percentage}
                 styles={buildStyles({
@@ -24,12 +24,14 @@ export default function BudgetTracker() {
                     
                 })}
                 text={`${percentage}%Gastado`}
+                
                 />
             </div>
+            
 
-            <div className="flex flex-col justify-center items-center md:gap-8 gap-4">
+            <div className="flex flex-col justify-center items-center md:gap-8 gap-4 md:items-start">
                 <button
-                    className="bg-red-700 w-full p-1 md:p-2 text-white uppercase font-bold rounded-lg "
+                    className="bg-red-700 w-full p-1 md:p-2 text-white uppercase font-bold rounded-lg mt-4 "
                     type="button"
                     onClick={() => dispatch({type:'reset-app'})}
                 >
